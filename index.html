@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RabbitFlow — Do filamento ao financeiro.</title>
+<meta name="description" content="O app que organiza suas consignações 3D. Lojas, chaveiros e recebimentos — tudo no celular. R$19,90/mês.">
+<meta property="og:title" content="RabbitFlow — Do filamento ao financeiro.">
+<meta property="og:description" content="Pare de perder dinheiro no caderno. R$19,90/mês.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04040a;
+  --s1:#0a0a14;
+  --s2:#10101c;
+  --s3:#181824;
+  --b1:rgba(255,255,255,0.06);
+  --b2:rgba(255,255,255,0.11);
+  --or:#F07828;
+  --or2:#C4621A;
+  --or3:rgba(240,120,40,0.12);
+  --or4:rgba(240,120,40,0.22);
+  --tx:#F0EDE8;
+  --tx2:#8C8884;
+  --tx3:#3E3C3A;
+  --gn:#3FB96E;
+  --f:'Inter',system-ui,sans-serif;
+  --r:12px;--r2:20px;--r3:28px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--f);background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+
+/* ── SCROLL REVEAL ── */
+.r{opacity:0;transform:translateY(32px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1)}
+.r.in{opacity:1;transform:none}
+.r.d1{transition-delay:.1s}.r.d2{transition-delay:.2s}.r.d3{transition-delay:.3s}.r.d4{transition-delay:.4s}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 0;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+nav.on{background:rgba(4,4,10,.88);backdrop-filter:blur(20px);border-color:var(--b1)}
+.nw{max-width:1080px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:17px;font-weight:800;letter-spacing:-.03em}
+.logo em{color:var(--or);font-style:normal}
+.cta-nav{display:inline-flex;align-items:center;gap:7px;background:var(--or);color:#fff;font-size:13px;font-weight:600;padding:9px 20px;border-radius:var(--r);cursor:pointer;border:none;font-family:var(--f);transition:background .2s,transform .15s,box-shadow .2s;letter-spacing:.01em}
+.cta-nav:hover{background:#FF8C38;transform:translateY(-1px);box-shadow:0 6px 20px rgba(240,120,40,.35)}
+.cta-nav:active{transform:none}
+
+/* ── HERO ── */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:130px 28px 80px;text-align:center;position:relative;overflow:hidden}
+/* ambient bg */
+.hero-amb{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hero-amb::before{content:'';position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:900px;height:900px;background:radial-gradient(ellipse,rgba(240,120,40,.09) 0%,transparent 65%);animation:breathe 5s ease-in-out infinite alternate}
+.hero-amb::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,black,transparent)}
+@keyframes breathe{from{opacity:.7;transform:translateX(-50%) scale(.95)}to{opacity:1;transform:translateX(-50%) scale(1.05)}}
+
+.hero-inner{position:relative;z-index:1;max-width:680px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--or3);border:1px solid var(--or4);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--or);letter-spacing:.07em;text-transform:uppercase;margin-bottom:32px}
+.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--or);animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+h1{font-size:clamp(52px,9vw,96px);font-weight:900;line-height:.98;letter-spacing:-.05em;margin-bottom:26px}
+h1 .or{color:var(--or)}
+h1 .dim{color:var(--tx2);font-weight:300;font-style:italic}
+
+.hero-sub{font-size:clamp(16px,2.4vw,19px);color:var(--tx2);line-height:1.65;max-width:460px;margin:0 auto 44px;font-weight:400}
+
+/* ── SINGLE CTA ── */
+.cta-big{display:inline-flex;align-items:center;gap:10px;background:var(--or);color:#fff;font-size:15px;font-weight:700;padding:16px 34px;border-radius:14px;cursor:pointer;border:none;font-family:var(--f);transition:background .2s,transform .15s,box-shadow .25s;letter-spacing:.01em;box-shadow:0 0 0 0 rgba(240,120,40,.5)}
+.cta-big:hover{background:#FF8C38;transform:translateY(-3px);box-shadow:0 12px 40px rgba(240,120,40,.4)}
+.cta-big:active{transform:translateY(-1px)}
+.cta-big svg{width:16px;height:16px;flex-shrink:0}
+.cta-note{font-size:12px;color:var(--tx3);margin-top:12px}
+
+/* ── IPHONE MOCKUP ── */
+.iphone-wrap{position:relative;width:100%;max-width:1080px;margin:70px auto 0;display:flex;justify-content:center;align-items:flex-end;gap:40px}
+.iphone{position:relative;width:260px;flex-shrink:0}
+.iphone-shell{width:260px;height:530px;background:linear-gradient(145deg,#2a2a2e,#1a1a1e);border-radius:44px;padding:10px;box-shadow:0 0 0 1px #3a3a3e,0 0 0 2px #111,inset 0 0 0 1px rgba(255,255,255,.06),0 60px 120px rgba(0,0,0,.8),0 20px 40px rgba(0,0,0,.5);position:relative}
+.iphone-shell::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:96px;height:28px;background:#0a0a0e;border-radius:0 0 18px 18px;z-index:10}
+/* Dynamic Island */
+.iphone-island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:80px;height:22px;background:#000;border-radius:12px;z-index:20}
+.iphone-screen{width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;position:relative}
+
+/* glow beneath iPhone */
+.iphone-glow{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:180px;height:60px;background:rgba(240,120,40,.35);border-radius:50%;filter:blur(28px);pointer-events:none}
+/* reflection */
+.iphone-reflect{position:absolute;bottom:-80px;left:50%;transform:translateX(-50%) scaleY(-.5) perspective(300px) rotateX(8deg);width:260px;height:530px;opacity:.06;background:linear-gradient(145deg,#2a2a2e,#1a1a1e);border-radius:44px;filter:blur(4px);pointer-events:none}
+
+/* iPhone floating animation */
+.iphone{animation:float 5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* ── APP SCREEN CONTENT ── */
+.app-hdr{background:#0d0e13;padding:44px 14px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05)}
+.app-logo{font-size:13px;font-weight:800;letter-spacing:-.02em}
+.app-logo span{color:var(--or)}
+.app-badge{font-size:8px;background:var(--or3);color:var(--or);padding:2px 7px;border-radius:100px;border:1px solid var(--or4);font-weight:600;letter-spacing:.04em}
+.app-body{padding:12px}
+.app-greeting{font-size:11px;color:var(--tx2);margin-bottom:2px}
+.app-name{font-size:15px;font-weight:700;letter-spacing:-.01em;margin-bottom:12px}
+.app-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.app-card{background:#0f101a;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px}
+.app-card-ico{font-size:14px;margin-bottom:4px}
+.app-card-nm{font-size:9px;font-weight:600;color:var(--tx);margin-bottom:1px}
+.app-card-sb{font-size:8px;color:var(--tx3)}
+.app-fin{background:linear-gradient(135deg,#0f0700,#180f00);border:1px solid var(--or4);border-radius:10px;padding:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.app-fin-lbl{font-size:7px;text-transform:uppercase;letter-spacing:.05em;color:var(--tx3);margin-bottom:2px}
+.app-fin-val{font-size:13px;font-weight:800;letter-spacing:-.01em;color:var(--tx)}
+.app-fin-val.or{color:var(--or)}
+.app-loja{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.app-loja:last-child{border-bottom:none}
+.app-loja-av{width:26px;height:26px;border-radius:7px;background:var(--or3);border:1px solid var(--or4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.app-loja-nm{font-size:9px;font-weight:600;color:var(--tx)}
+.app-loja-sb{font-size:7px;color:var(--tx3);margin-top:1px}
+.app-loja-vl{margin-left:auto;font-size:10px;font-weight:700;color:var(--or)}
+
+/* side mockups (smaller) */
+.iphone-side{width:200px;flex-shrink:0;margin-bottom:60px;opacity:.6;transition:opacity .3s}
+.iphone-side:hover{opacity:.9}
+.iphone-side .iphone-shell{width:200px;height:406px;border-radius:38px;padding:8px}
+.iphone-side .iphone-island{width:65px;height:18px}
+.iphone-side .iphone-screen{border-radius:31px}
+.iphone-side .iphone-glow{width:130px;height:44px}
+.iphone-side .iphone-reflect{width:200px;height:406px;border-radius:38px}
+.iphone-side{animation:float2 5.5s ease-in-out infinite}
+.iphone-side.r2{animation:float3 6s ease-in-out infinite}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes float3{0%,100%{transform:translateY(-8px)}50%{transform:translateY(4px)}}
+
+/* Screen 2 — Financeiro */
+.scr2-hdr{background:#0d0e13;padding:36px 12px 8px;border-bottom:1px solid rgba(255,255,255,.05)}
+.scr2-tt{font-size:10px;font-weight:700;letter-spacing:-.01em}
+.scr2-sub{font-size:7px;color:var(--tx3);margin-top:1px}
+.scr2-card{margin:10px;background:linear-gradient(135deg,#0f0700,#180f00);border:1px solid var(--or4);border-radius:10px;padding:10px}
+.scr2-lbl{font-size:7px;text-transform:uppercase;letter-spacing:.05em;color:var(--tx3);margin-bottom:3px}
+.scr2-val{font-size:20px;font-weight:900;letter-spacing:-.02em;color:var(--or);margin-bottom:8px}
+.scr2-row{display:flex;justify-content:space-between;margin-bottom:2px}
+.scr2-row span{font-size:8px;color:var(--tx3)}.scr2-row strong{font-size:8px;color:var(--tx);font-weight:600}
+.scr2-btn{margin:10px;background:var(--or);border:none;border-radius:8px;padding:9px;font-size:8px;font-weight:700;color:#fff;width:calc(100% - 20px);font-family:var(--f);cursor:pointer}
+
+/* Screen 3 — Comerciante */
+.scr3-hdr{background:#0d0e13;padding:36px 12px 8px;border-bottom:1px solid rgba(255,255,255,.05)}
+.scr3-tt{font-size:10px;font-weight:700}
+.scr3-sub{font-size:7px;color:var(--tx3);margin-top:1px}
+.scr3-itens{margin:10px;display:flex;flex-direction:column;gap:6px}
+.scr3-item{background:#0f101a;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:8px;display:flex;align-items:center;justify-content:space-between}
+.scr3-item-nm{font-size:9px;font-weight:600;color:var(--tx)}
+.scr3-item-sb{font-size:7px;color:var(--tx3);margin-top:1px}
+.scr3-inp{width:44px;background:#1a1b22;border:1px solid var(--or4);border-radius:6px;padding:5px 6px;font-size:11px;font-weight:700;color:var(--or);text-align:center;font-family:var(--f)}
+.scr3-enviar{margin:10px;background:var(--gn);border:none;border-radius:8px;padding:9px;font-size:8px;font-weight:700;color:#fff;width:calc(100% - 20px);font-family:var(--f);cursor:pointer}
+
+@media(max-width:768px){
+  .iphone-side{display:none}
+  .iphone-wrap{gap:0}
+  .iphone{animation:float 5s ease-in-out infinite}
+}
+
+/* ── PAIN SECTION ── */
+.pain{padding:100px 28px}
+.cx{max-width:1080px;margin:0 auto}
+.section-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--tx3);margin-bottom:16px}
+.pain h2{font-size:clamp(30px,4.5vw,52px);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:0}
+.pain-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:48px}
+.pain-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:26px;transition:border-color .25s,transform .2s}
+.pain-card:hover{border-color:var(--b2);transform:translateY(-4px)}
+.pain-card-ico{width:38px;height:38px;background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.pain-card h3{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--tx)}
+.pain-card p{font-size:13px;color:var(--tx2);line-height:1.6}
+
+/* ── FEATURES ── */
+.feat{padding:100px 28px;background:linear-gradient(180deg,var(--bg) 0%,var(--s1) 50%,var(--bg) 100%)}
+.feat-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1080px;margin:0 auto}
+.feat-inner.rev{direction:rtl}.feat-inner.rev>*{direction:ltr}
+.feat-list{display:flex;flex-direction:column;gap:28px;margin-top:40px}
+.feat-item{display:flex;gap:14px}
+.feat-dot{width:8px;height:8px;border-radius:50%;background:var(--or);flex-shrink:0;margin-top:6px}
+.feat-item h4{font-size:14px;font-weight:600;margin-bottom:5px}
+.feat-item p{font-size:13px;color:var(--tx2);line-height:1.6}
+@media(max-width:768px){.feat-inner,.feat-inner.rev{grid-template-columns:1fr;direction:ltr;gap:40px}}
+
+/* ── TESTIMONIALS ── */
+.testi{padding:100px 28px}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:48px;max-width:1080px;margin-left:auto;margin-right:auto}
+.testi-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:28px;transition:border-color .25s,transform .2s}
+.testi-card:hover{border-color:var(--b2);transform:translateY(-3px)}
+.testi-card.ft{background:linear-gradient(135deg,#0f0700,#180f00);border-color:var(--or4)}
+.stars{color:var(--or);font-size:11px;letter-spacing:3px;margin-bottom:14px}
+.testi-text{font-size:14px;color:var(--tx);line-height:1.7;margin-bottom:20px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:11px}
+.testi-av{width:36px;height:36px;border-radius:50%;background:var(--s3);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.testi-nm{font-size:12px;font-weight:600}
+.testi-role{font-size:11px;color:var(--tx3);margin-top:1px}
+
+/* ── PRICING ── */
+.pricing{padding:100px 28px;text-align:center}
+.pricing h2{font-size:clamp(28px,4.5vw,52px);font-weight:800;letter-spacing:-.04em;margin-bottom:14px}
+.pricing-sub{font-size:17px;color:var(--tx2);max-width:480px;margin:0 auto 52px}
+.anchor-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;max-width:700px;margin-left:auto;margin-right:auto}
+.anchor-item{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:16px 20px;flex:1;min-width:160px;position:relative;overflow:hidden}
+.anchor-item::after{content:'';position:absolute;top:50%;left:16px;right:16px;height:1.5px;background:rgba(255,80,80,.55);transform:translateY(-50%)}
+.anchor-lbl{font-size:10px;color:var(--tx3);margin-bottom:4px;font-weight:500}
+.anchor-val{font-size:18px;font-weight:800;letter-spacing:-.02em;color:var(--tx2)}
+.anchor-sub{font-size:10px;color:var(--tx3);margin-top:3px}
+.price-box{background:linear-gradient(135deg,#0f0700,#1a0e00);border:1px solid var(--or4);border-radius:var(--r3);padding:52px 44px;max-width:500px;margin:0 auto;position:relative;overflow:hidden}
+.price-box::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(240,120,40,.12),transparent 70%);pointer-events:none}
+.price-tag{display:inline-flex;align-items:center;gap:6px;background:var(--or);color:#fff;font-size:10px;font-weight:700;padding:5px 13px;border-radius:100px;margin-bottom:20px;letter-spacing:.05em}
+.price-num{font-size:80px;font-weight:900;letter-spacing:-.05em;line-height:1;color:var(--tx)}
+.price-num sup{font-size:30px;color:var(--or);vertical-align:top;margin-top:16px;font-weight:700}
+.price-period{font-size:14px;color:var(--tx3);margin-bottom:6px}
+.price-equiv{font-size:13px;color:var(--or);font-weight:600;margin-bottom:32px}
+.price-feats{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:36px;text-align:left}
+.price-feat{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--tx2)}
+.price-feat-check{width:18px;height:18px;border-radius:50%;background:rgba(63,185,110,.12);border:1px solid rgba(63,185,110,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.price-feat-check svg{width:10px;height:10px;stroke:var(--gn);fill:none;stroke-width:2.5}
+.price-note{font-size:12px;color:var(--tx3);margin-top:14px}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--b1);padding:44px 28px}
+.fw{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.f-logo{font-size:15px;font-weight:800;letter-spacing:-.03em}
+.f-logo em{color:var(--or);font-style:normal}
+.f-tagline{font-size:12px;color:var(--tx3);font-style:italic}
+.f-copy{font-size:11px;color:var(--tx3)}
+
+/* SVG icons inline */
+.ico{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+/* ── RESPONSIVIDADE COMPLETA ── */
+
+/* Tablets (≤1024px) */
+@media(max-width:1024px){
+  .iphone-wrap{gap:20px}
+  .iphone-side .iphone-shell{width:180px;height:366px;border-radius:34px}
+  .iphone-side .iphone-island{width:60px;height:17px}
+  .iphone-side .iphone-screen{border-radius:27px}
+  .pain-cards{grid-template-columns:repeat(2,1fr)}
+  .testi-grid{grid-template-columns:repeat(2,1fr)}
+  .price-box{padding:40px 32px}
+}
+
+/* Mobile grande (≤768px) */
+@media(max-width:768px){
+  /* Nav */
+  nav{padding:14px 0}
+
+  /* Hero */
+  .hero{padding:100px 20px 60px;min-height:auto}
+  h1{font-size:clamp(40px,11vw,64px)}
+  .hero-sub{font-size:16px;margin-bottom:32px}
+  .cta-big{font-size:14px;padding:14px 26px;width:100%;justify-content:center}
+  .cta-note{font-size:11px}
+
+  /* iPhones — esconder laterais */
+  .iphone-side{display:none}
+  .iphone-wrap{margin-top:50px;gap:0}
+  .iphone{width:220px}
+  .iphone .iphone-shell{width:220px;height:448px;border-radius:40px;padding:9px}
+  .iphone .iphone-island{width:70px;height:20px}
+  .iphone .iphone-screen{border-radius:33px}
+  .iphone-glow{width:140px;height:44px}
+  .iphone-reflect{width:220px;height:448px;border-radius:40px}
+
+  /* Sections */
+  .pain{padding:70px 20px}
+  .pain-cards{grid-template-columns:1fr}
+  .feat{padding:70px 20px}
+  .feat-inner,.feat-inner.rev{grid-template-columns:1fr;direction:ltr;gap:40px}
+  .testi{padding:70px 20px}
+  .testi-grid{grid-template-columns:1fr}
+  .pricing{padding:70px 20px}
+
+  /* Pricing */
+  .anchor-row{flex-direction:column;gap:8px}
+  .anchor-item{min-width:unset;width:100%}
+  .price-box{padding:32px 24px}
+  .price-num{font-size:64px}
+
+  /* iPhone na seção features */
+  .feat-inner > div:last-child > div{width:180px!important}
+  .feat-inner > div:last-child .iphone-shell{width:180px!important;height:366px!important;border-radius:34px!important}
+  .feat-inner > div:last-child .iphone-screen{border-radius:27px!important}
+
+  /* Containers */
+  .cx,.nw{padding:0 20px}
+}
+
+/* Mobile pequeno (≤480px) */
+@media(max-width:480px){
+  h1{font-size:clamp(36px,13vw,52px)}
+  .hero-inner{max-width:100%}
+  .iphone{width:200px}
+  .iphone .iphone-shell{width:200px;height:408px;border-radius:38px}
+  .iphone .iphone-screen{border-radius:30px}
+  .iphone-glow{width:120px}
+  .price-num{font-size:56px}
+  .price-box{padding:28px 20px}
+  .price-num sup{font-size:24px;margin-top:12px}
+}
+
+/* Ultra wide (≥1400px) */
+@media(min-width:1400px){
+  .cx{max-width:1280px}
+  h1{font-size:100px}
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nw">
+    <div></div>
+    <div></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-amb"></div>
+  <div class="hero-inner">
+    <div class="r in" style="margin-bottom:32px;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAdoAAAE0CAYAAACLqvJdAAAACXBIWXMAAC4jAAAuIwF4pT92AAAgAElEQVR4nO3dCXwcZf0/8O/3md1kd3Z7RYGKUDlKi2iOhhYQUKAKFkpJdrcq9yH4l0NQQEVFKYecKiKoqByiyN1cLYVyFQuChdY0uwsVSrlPodACyW7SZuf5fyfZ8itQ2iTd3Wdm83m/XtOZ3aTZT9J0P/vszDwT0FoTAAxvybh9gCL+OhE/S47znLb0c8uX97wwM+2sMZ0NwO8CpgMAgHnKIUUWn9F3w5LKldXECXYunYi+TJqWE+mHc5oWOK9kF9cvdtaaTQvgLyhaAKAe5icrP363Jct20rrbyUj3AIvpAmuc3Snl+y/S+sGc5gUr2jJLZzpOrtR5AfwERQsAtFtb9pVkzH5PNkdu4lOjskwj5mlSvDQxZr8rxTvf0XTr6z2Zu6fNc3pKEBfAV1C0AECO4+h0IrJMRq57DPKvjpLlW4rpW58N2e+m4tEWdpzb3nmv+/59Fji9xcgK4DcoWgDop/lJYhps0a5vFDMdS5Y6tmqM/ZYUd5Oj9W2trd0PzZImL1hOAJ9B0QJAH816GfcdBlUQW8jo+ETFfGI8Zj+fSkT+4nRnr6ub57xVqAcA8AsULQD0c/STpApWtOvbXgr8Yitkn5uOR++QQv9zTVPXv4rxQABehKIFgD68Rj1JoaI+RKUMmI+U0j0ynYgmNdGfOp3MTXu2OO8X9VEBDEPRAkCf2rszryYb7f9JGW5VioeTsfPVI5R9aToRuYG6+VfV8zpfKcHjApQcihYA+vQdeRyPNMvY9qQSPuxIebzTZCR9ohTu9b09dMmkO7teLOHjAxQdihYAPpBjus0iKmXRrlPhHjwVqKTj04no33Svc1FNW+Z5AzkACg5FCwAfaGvJPhyP2a/L5mcMRQjKcgIH1DFSuDf25pyLJ7VmVhjKAlAQKFoA+IB7vms6EZkto8tTDUdxC/fbAUsdLYV7Mzm5i6pbsk8bzgQwJChaAPgQTXQ7E5ku2nXc56ijSVlHpOPRW9bmchfWt2WfMh0KYDBQtADwIS0t2UfjsfArMqrdxnSW9VjuqUHBgHW4jHBvd3p7f1nb1v2k6VAAA4GiBYAPcd8+TiUid8io9nTTWTZAyXKoCgS+KRmbc7ncBZNau1OmQwFsDIoWAD6Gc3y7jCG9WLTrKCaeGbACCRnh3uaspR/Wzul81XQogA1B0QLAx9TOyTyWjNnu+ayfM51lE9w5Iw9VQTo4HY9csPbl7G9xYXrwGhQtAHyMO3lFKhF1D4r6keksAxQl5kuD4+xjUwn7ezVNmQWmAwGsg6IFgA1y1uausYLWmdS/X9QvPs+kHkgnorfi7WTwChQtAGxQ3ZzsMzKqvUdGtQeazjIE7tvJ01OJyLmrVmWvxEXowSQULQB8IsfJ/d5Slh+L1jWCiX9TNcY+riMR+V5dU9dC04FgeELRAsAnamvrmR+P2c/K5o6ms2yGL1rED6bj0ZvWdmd+XH+X87rpQDC8oGgB4BPlz6n9ozsyNJ1lM3HfhBdhe4YU7rnvrM78Hm8nQ6mgaAFgo95fk/3ryAr7Atm0TWcpgFFSuL+tGhM+YmmjfRguWAClgKIFgI3aa66zKpWI3sRE3zGdpXB4csDipelY5JTqlq6/m04D5Q1FCwCblMv1/j5gBcqoaPtESfHf5EXEAd3dmZN3m+e8ZzoQlCcULQBskjufsBTSQzKq/YrpLIUm39MR4ZD9pVQsenhNS+djpvNA+UHRAsCAaK3/wMxlV7R5O7Cih1OJyDktLdnL3IPATAeC8oGiBYABWb0621w1xhfzHw9VkIkvjsXsr7YfpI7GaUBQKChaABgQ93SYdDx6hXvUruksxcREXwuG7WQqZh9V05K5x3Qe8D8ULQAM2Ps6c90ItmfJ5mjTWYpsC1ZqXioR+XFNU9flpsOAv6FoAWDA9mxx3k8lon+WUd9ZprOUgOVO1JFORL/w9PLMSTPTzhrTgcCfULQAMCiOQ1daqu+i8BWms5TItyfuZO/UMV0l6uY5b5kOA/6DogWAQalr6XxNRrW3yKj2GNNZSobpy1bIfnxpY6jBPdXJdBzwFxQtwBAtnKpCo0ZVTrXY2k5ubinLas36Da31G7mcfsOyet6obXZWG45ZFLlc7+UBK3A09R07NGxsJ9/zI+lE9Mjqps4202HAP1C0AEMgT7bfrxpjnyObVevf785cz8yk+v5n2e7ndZGmVzTRs8x6hSZ+1nFyK5SiFcuX97zg1/1+7qhOvrd7ZfPrprOUWFSW5nQ88ova1uzFjuNo04HA+1C0AIOUitvHM6srBvjpEeneiTLsm9hfw0SWsvo+MHGCnZOyelGKeIWMhFfI+jli5+lcjp96773uFzx/dRnt/IpYDbeidSl5NXVhstH+/Pzp6oRp85we04HA21C0AIMkJXt6gb6U27g7SPvuIBV8QP+bsBYF5F4ZLfdICT+jST9Fmp8i1k87Dj+1Zk1muVfm5K1uzjyQSkT+Ldm/ZDqLEUxHbh2yxy6cqmLyoqjTdBzwLhQtwCBJ+Y3k4u+arJTli/I4X+x/KJaRMFE4ZOt0IvKqlO/TUr5POpqfVA6l3nkv84SJJ3vHcX4pI/R5pX5cr3Ant6gaE35gcUIdNKXJedt0HvAmFC3AIEn5mdyvKs/tvI38uY2sv6r63ovuGwFLAUefl5cBT2jNKUc7C999t/tfUr7dxQxT39Zzd0fM/o/E2LWYj+NtvFuI7IUdsegB7hHZptOA96BoAQZLU48Hj7V1E+0gqx2Y6RCL1c+lfLPpePRhCfwA5XL3N89d01HoyfLdg4Gk4N2LwrcW8uv60BcsRY8sbbT3x8Xk4aNQtACDxfoh+WMX0zEGICz1ewC5+38DAYo3BlZK8S4g7dzXu5bvm3Rn14uFeJDalsycZMxOupuF+Ho+tl3AUg8vbQx9HefawvpQtACDlCO61SI60XSOQWP6tPz5TWL1zUAlUSoRlTLQTTly7pjUlP3vUL+sO6pNxSIXs+JbC5jWr8YGrMDCZGPk4NrWrkdMhwFvQNECDFJbS/bheCz8qjTXZ01n2RxMVCN/1gTIOm9d6Uppzq5ryS4b7Nda9W62qWpM+JW+/ccwWll8T7rRnlndmplvOgyYh6IFGCR3P2cqHr2JmX5sOkuhrCtdS1nnpePRZXLH7N5cb9NA3wJ1z/lNxSN/lJ/JRcXO6hMRslRbOhY9orqlc7bpMGAWihZgCHo4c1mI7BPoIzNDlQUmd//zOQErcE46EX1Wtls06bblLdl/z3Sc3Cf9td5c9ppgoG+2rFDJsnpbBSm6ORmL5mpbOltMhwFzULQAQ+CeM5mMR2cppqtMZymyHWX5IRP/cGLMflOKdw45NHetk7m/vs3JrP+JcnulfPwW2TzOTFRPCipFt6YS4URNU/ZO02HADBQtwBCtXp35U9UY2z0o6gums5SIe+GEE2SUdkJQ2Zl0PPpvd9IMTfxfzull3Vb2yQpdcaXiAIr2wyqYrDuScbuhtjlzr+kwUHooWoAhcvdLJhP26YrUcHzytInpq+6kGf0zRzKF5C65703qOzCbLLPxPCekWLWm4/YMd+pK02GgtFC0AJuhtilzXyoRaWPiBtNZPGJL0wE8LEys2tLxyIHVzV0Pmw4DpYOiBdhMvVqfGWSeRv3zEwNsTISY5y1NRL4+qanr36bDQGmgaAE2U31z5tlUInoFE51lOgv4wogA8d3Jhuj+tW2di02HgeJD0QIUQKeTuXCECh+BCRtggEapAN2TjIem1jZ3d5gOA8WFogUogD1bnPc7EpEjLSL3QBccCAQDMUZxYN6SWGSPyS1dL5sOA8WDogUokLqmroWpePRiZvq56SzgG1tXKp77aEx92X2xZjoMFAeKFqCAVq3OnFc12p5KTHuazgK+UTtC2bfMVqphYzNvgX+haAEKqO/c2rh9hCLl7ncbZToP+Mb0ibHwb2V9mukgUHgoWoACq23OvJCKRb6Ly8bB4PCpqUR0RU1T55Wmk0BhoWgBiqCmpeu2dCKyrzx5+u+6tWAME12ebAw/W9uanWc6CxQOihagSNa+lD0tuK29szx77ms6C/iGpSzrlo5DQl+um9OdNB0GCgNFC1Ak9Yudte0N6hvBgP243NzedB7wjRFW0LozeUh0j9o5na+aDgObD0ULUER9l46LhxqIA4/KzajpPOAXvI0K0pyFU9U++yxwOk2ngc2DogUosurm7nQyHj1KMTXJTWU6D/hGfdWY8E2zlYrjtB9/Q9EClEBtc2drOh6ZRcwXmM4CfsKHTIiFfyUbZ5hOAkOHogUokdrW7IXJRruamL5pOgv4BxOfno5Hn6lu7rzadBYYGhQtQIk4jqPbG9RxwYA9Xm7Wm84DPsJ0ZbrRfr66NTPfdBQYPBQtQAnVtzmZJbFIYyXzYnny3Mp0HvCNAFnqtnQ8tLe7z990GBgcFC1AiblXakk2RhLKYvdKP7hYPAzUSOLA3CUz1B6T5zpvmA4DA4eiBTCgtrXrkVTCPplJXWc6C/jK5yorwnPaG9S+7rsjpsPAwKBoAQypacpcn4pHqpn5B6azgJ/wlGAg/I/zlJo5y3Ec02lg01C0AAatWp390ZjR9gRmOsh0FvATjsVj9izZmGU6CWwaihbAIPeyegunqkTVGLtFbk4znQd85exk3H6wtjnzT9NBYONQtACGSdl2S9nGpGxb5ebXTecB37AU842LE6puSpPztukw8MlQtAAekC/bRpQtDA5vU0nh65RSMfc8bdNpYMNQtAAegbKFoWDiho5G+3uyeZXpLLBhKFoAD0HZwlAw02XJeOjh2ubuDtNZ4ONQtAAeg7KFIQgxB25JTVOTa+Y7XabDwIehaAE8CGULg8VEO1PEvlI2jzedBT4MRQvgUW7ZLtpLxSJj7Ta5ub/pPOAL307FIvfWtHTdZjoI/B8ULYCH7fGIk5WybUDZwkCx4j+nGuzHa9oyz5vOAv1QtAAeh7KFQRrFAb6lfYr6cv1iZ63pMICiBfAFlC0MDu8eGGdfIBs/MZ0EULQAvuGW7exqdfCECfZfmOgY03nA2+R35EfJhP1AbVPmPtNZhjsULYCPzEw7a5RSxyUbwyuI+Xzqez4F2CClSP0tlVB1NU3Om6bDDGcoWgCfyU+198tkIvK0Iv6bbIdNZwLP+gyRfYO8OJuOKRrNQdEC+FRtU9cdyYboCypA7n7bz5jOA97ERAd2NIbPkM3fmM4yXKFoAXystq1z8ZJYZPdKxXPdm6bzgDcx80UdsejCupbOJaazDEcoWgCfm9zS9fLCqWrvqtH21TJ8OdJ0HvCkCkvRLY/GVP2eLc77psMMNyhagDKwzwKnU1ZHpRL2g0zKvYqLbToTeM74ESp8maxPMh1kuEHRApSRmqbM9cmG0GMqEHCn4PuC6TzgNfydVGPoLzWt3UtNJxlOULQAZaa2rfvJ1DS1O/dPMP9t03nAUyy2Alcqpb6Co5BLB0ULUIbyl0o7PpWIPMjEV8t21HQm8Iy9l8bCh8v6JtNBhgsULUAZq2nq+kcybv9LkfozMR1gOg94gyK+bOFU1Zbftw9FhqIFKHO1zZkXZPX1dCxyNCm+XLY/ZTgSmLf1mDH2zwlzIZcEihZgmKhu6fp7KqHmM9m/k5uHms4DZjHRD9obwjfUt2WfMp2l3KFoAYaR/Jy3h6Xi0ZuZ9R/l6XYb05nAmMpgwLpnyQx7v8lzM8+ZDlPOULQAw1BNc+fcx6erhaFK+2xmOpUwX/JwNa6yQj2Isi0uFC3AMLXbPOc9WZ2Vnh69ikJ0HvVfes8yHAtKb1xFBf9zaaM9dVJrZoXpMOUIRQswzFXP63xFVsen46ErNAUukRHuQaYzQWkx8bYBix6Ust0PZVt4KFoA6FPd3J2W1fRUwp4qT7yXytPvZNOZoJR4G5RtcaBoAeBDapoyC5RSuyUb7Bmk9E/lCXgP05mgVNyy5fZ0PNqW07lbnFd67qtf7Kw1ncrvULQA8DH56fnmuEsybu+rWJ0l21+nvrNCoMyNcK8CZbF1pLWtvTKdiMx2tL6ttbX7oVnyi2E6nB+haAFgo2qbM/+U1T+XxqO7Wqx/wsRxcicXgvLH9Gn540TFfGI8Zr8mpduUc/Qc55XuhRjpDhyKFgAGZFJz539k9Y1UIjyByfqRbB8tS4XhWFA6W0vpnmopWcbZ76bj0XtI63lrnexd9W3OStPhvAxFCwCDUtOUXS6r7yyJRc6vYDqDmb8jtyOmc0FJjZLR7jeJ+ZtBZefSiei/pXTn5rRzZ11LdpnpcF6DogWAIZnc0vWyrE5fnFC/DOnw8fKke6Lc3t50Lig599zrveXff2+LrUuldN2JL5o19f6tpqn7CdPhvABFCwCbZUqT87asLjtPqV83NFROU2ydwkzTCPtxh6sdZPkhU+CH6URkiaP5b2s4c0v+92RYQtECQEHkj0i9y12WzLB3qAiq70rhHk+4WtAwxpMV0+QQ2b9OJSJztdbXTGrtvm+4XXQeRQsABZefN/esRXupc8Nbhb6lmE+SJ93dTOcCYyqZeCYzz0zG7I50PPKrd1Znb99ngdNrOlgpoGgBoGj2eMTJyuoGd+k4JFSrAoHDZZTrXqJvnNlkYFAdMd9UNcb+ZTIevTyXy1xf3+ZkTIcqJhQtAJRE3ZzupKySSqmfdMTCe8n2YTLK+YastzAcDczYXjFdpQL2Oal45Krunuzv8he6KDsoWgAoqfz+uX+5y8Kp6vtVI0NfI0sdJrdj5M5KBMPNFsx8fjhkn5xK2Ge3tHTfUG4zUKFoAcCY/D66+e6yaC91YmjLyv0UqwPlidc9anm84XhQWmOZ1HWxmFu4kR/UNHX9y3SgQkHRAoAn5Pfn3pVfaGmjPV4pNU1x3xzL+xEmxRgWmGhX+fOhdDx6R+8a/eNJd3a9aDrT5kLRAoAn5S/V9nt3mT9dVX6mMrSPIrUvuU/ETO4l/KoMxoPiYnfmqUAlz0jFo79ZtTpz4T4LnG7ToYYKRQsAnjdtntMjq3vzC8lIlx+fHto+GOTJ8oy8K/cXr4yEaJTJnFBwYfm3/XnVGDuWjIeOrG3u7jAdaChQtADgO/kDqp7LL7e797nl2xGr3Im16itdzW4J0yTCAVbl4AuKA4+l45FfNLdmf+23g6VQtABQFvLluzy/3Ozed560b0ND5c4WSfkqGfFqnkxMdfIh22RWGJIKYr403mgf2N4QOaa+resl04EGCkULAGUrP/JZll/+7t43Wylrx0NC21uW3pkdtTMp/jyR3oWId5YPjzaZFwaAad9ggJMyuj2lurnrZtNxBgJFCwDDykzHyclqRX65c/2PLZmhxlZUhHbRWu3CpCfKCGpnJpISdq/FCh4y2p1dKh2PHuxQ5uTaZme16UAbg6IFAMibPNd5Q1busmD9+5NxNVo59s6OcqR41eeZ+8rXHQG7lwW0DEQFF9NhiuzJHbFwo5evg4uiBQDYhPyIaVF++YB72tFWwYqJlmXJCJhrifS+7hVrCM+tpbSTpax/p+LRI2uaO+eaDrMh+GUAABii/GlHqfxyq3vf49PVyFCo8ius1X7EHJe7tjMYcbgYyUytqUTkbBnZXuq1y/ChaAEACig/Mb677/fOhVPV2VWjw2dI4f5UbkcNRyt3iokvTsbs2vYGdbyXrgiEogUAKJL8bEYXdcSiN1iKLpbto6hvlkEookODgfD49PRorHpe5yumw7hQtAAARVbX0vmarI5JxaPPMdO5pvOUP55MIVrcEYsk6lq6HjWdBkULAFAiLa2ZC+Ix270W7/6mswwDYy3FC1IJ++Sapsz1JoOgaAEASsSdQKNjujrCCoWXyqjrs6bzDAOV7qX3UvFI9arV2R/lL8tYcihaAIASqpvnvJWORU8mRW2mswwXzPyDqtH2Lo/MUIfuNddZVerHR9ECAJRY15uZ+yJj7TXkzt8LpcF0wMgK+/FUIjy9pim7vJQPjaIFACgx9yL36UT0cdnc23SWYWY8a+uRdGN0RnVr56JNf3phoGgBAAzQRAsZRVt6TJ8mix6Qke23ZGR756b/wuZD0QIAGKDJkaJVZ5vOMUzZTFZLKmF/txRHJKNoAQBMWKuWUdB0iGEtIC90rk0lItvUNHWdX9QHKuYXBwCADXMCNFaZDgHMxOel4tHPLm/NnJy/hGLBoWgBAAyQ4dQ2pjNAP2nb/zchFt5q0V7qMPdAtUJ/fRQtAIAZKFoPkZFtQ2Qr+/7FCXXIlCbn7UJ+bRQtfGC2UtbWDWTv2eK8bzrLcONeWi0YDG3JzH2L3LWlIv1peak9RmsdkqcB93zLCnnlHXJvy+eESFOIuO9jslCl3NaaqZeJeol0L2nu/eC2pl4ta2btzozjfiwjn75a/u5qJv2+Zn5P/s5qzrn3qdVrdW61/Dq89+67mff2WeB0mv3plCf599gWVxfwGKY9K8n+19KDI9Mm3dn1YqG+LIp2mFm0lwqHx4b2Jq225/7/6NvJk/E4WY+bGLPdV9iBdCLqnki/Up4IVsr9K+UZYaVmvVKexf+7dq1z1+S5medMfx9+0j5FBQPjKreXzQnsqJ2l1HaSwvyc3N5Cnm6lVHnLcMjewMQF/U/DUqofvnfdbf6/z1l3mz9ygz/2MV7vNn/wwQ8+ZvVvBcnqW1eNsUl+H7rkd+FZKeQV8jnPye/D8w45K9aupRVdXd0vmZrWzs+UUpyMhb+KC/l4j/yL7Byo5Ec7DgkdVDenO1mIr4miHQbc0VK4MnywFGosMtaeRu51MT/8/PxR7pP+1nL/1us+wX0qdp/fKyvUValE9CnW+i4p33m9L3U/XL/YWVuSb8Tj3J9zZWWonlntLD+fneQHNkHunhAcZ7sl2398qfroz9sXT7QRSVkjWWv6brH7bSj5XXB/H+xeKeKXpHxXyO/DCvktWe5oR56cujtqm53VhnN7VrIhfFTfFWbAq7a2goGFHbHo1+paOpds7hdD0ZapR2aoMSMqQjEmFZPR0tfkrlChntLdV3xSIjvLk+oZUiLvpxKRexyHLy3EL6RfuCOS9obKz1vEe8qN3eWuPeTnvAv1VSn1HV0xTLjPITvIL8UO8vtwgHuHYvdHYGsp4Gc16Q7WtJQc3d6T6+6YPNd5w2xc81LTVIQj4YtM54BNGmUpuiuVCO+9uVM2omjLTHuDsoNW+AcjK+yz5ObIEjzkCHmCnSm/kIl0PHpHrjf387o52WdK8Lgl1X6AGhW0Q1+SUt1DSmX3ZMzeQ+4ebTqXh7mvNMbL78Z42ZrpviVdafW9Df2G1tQuH2uXAk729Drtu83rft5xHG06cKmwbf9IVrhyjz9swWTdIyPbvfLXFB4SFG2ZcA9kmhALHRMMhM83dPkt993lb1pBK5ZORK7LOXzB5vxiekFHLLyLxepgzTw9OMLek/D/pRDGymD/IFkfRP27IkhetKyWF2kdRDrpEC9j1ssymeyyPe523jEdttDkez1OKfUT0zlgULaT14nzk3H1laHuDsETRxlIx6KHTGy0L5bNXUxnob59kXyijHCPltHLlWt7MxfUtzkZ06EGwj1QLLRl5X7yRDhdXjVMt5TlHrDkj72o/jZafsj7yk963/z77hSx+0a/r8kwdxmTXqaJ/8s5vazbyj5Z6FMvSqH/gLjwFfK7dbLpLDAETNWK7LnyHHHAUM6zRdH62JIZamxl0P4HKfqq6SwbYMvyExlhf7X9INVQf5fzuulAG/JYo9rKVnZc/iMdFBlrT6X+3OAN+QPy+Gt9L3ZkWBGivgJ+kzQt0zLyZc1POuTIKLh7WU2T86bpwBvS9/90nH0H4QICfre3PTZ8y2ylEoOdQQpF61MdsejkyopwC3n+pHeeEgiHH0vGQ4fUNnd3mE7jyu/HbpRR0hG2ZbsH8OD/gb9sKS+MtmQZAa87Apr6C/htGQE/KSX8lIyCX9RML8kHXuBufqH57sxrsxzHKVXA/CldX5dXB4dVVtgNclekVI8NxeNOajGx0f6zUuo7gzmuAE8wPpSORw6zFF8n/+xh01kGQn45t2UOPJyKRw+vae6cayLDefI/IxYL7UtaHRUM2AnqO4gLysyn5N/0K/IL95X1zxKWYTDFY3aPFPHL2i1eWTTpl2U07J4jLqNj/WaOnZVK9axctYreGex5wW6p0tbhzwSZt5bO/yyx/lpwW3umfOjTBf8OwTym4ztiYfdF3IAvRICi9RG3LOQJ40Jido8o9ltPRJmpNZWI/KimqevyUj1oOh6q1hQ4Mh4LHy4/sm1891ODQqmkvqOgabx7g9fN4JGf9MPqm6DDpqox5Eghr5YCfkvu7trQDFty/7qRsTuD19bBcba7Xu/6AOy//50wKPL7MyvdaD9e3ZqZP5DPR9H6hHt6SazRvpmo74hNv1LyC/obKdsd6lqypxbrlA73PEWK2EfJc92JxIHaD82IBLBxbmFWya9LVf/Nj8+wBUB9eyzUje0NkV3r27pe2tQno2h9oG+f4ojwvbK5m+kshSBle0pHzHYPk/95Ib9ue9zeMUh8MkfsbxPOcQWAYmL6dDBAt8+uVl+ZmXbWbOxTUbQe1/d2cWP47/KvWhYlu44MDM5OJaKv1DR1/mlzvo47Q9PSxtD+itWpQVbuaB+X+ASAEuHdJ+wU/o1snLqxz0LRelzMPT+WKWE6RzFI2f4+GY++Udvc2TrYv/toTI2IsH1MstH+nnyhicXIBwCwKcz8vVQi8khNU9etn/Q5KFoPy88i82PTOYrIUkw3pxsj06pbux4ayF9obwjvHAyok0Yo+1gqzRSTAAAbxcTXyHNTR31b9qkNfRxF61Hp6dFtVEj9znSOEgiTxfck45Fjapu7bt/QJ/Tto1bhmVrx8cGA9WXCISkA4C3RQMD6x3lK7bah87VRtF5Vqa+QPhlhOkaJhBTzrel4ZDz18N91KLNGa1rjkL2jxfrbwYB9hHzOKLQrAHiVPD/tGmsMu89VN370YyhaD+qIhQ+ylFWW+9GID6UAABxNSURBVGU3wr3g7YUUoguZ7L6rzK2b9xYAwBeYLly0l5r90fmQUbQe405sHxlrX2U6BwAADI47C15kq/Dpsvmh6w2jaD1GStY9B3QH0zkAAGAImM96rFFdt3ur8791d6FoPSQ/xeJppnMAAMCQjbSt8LmyPmndHShaD2k8pPJAWU0wnQMAADYHn9DeEP7dutN9ULQeoizr+6YzAADAZgsEAtaRlJ9mFkXrEelYeKI07ddM5wAAgM3H/ReAQdF6Civ34tA4lwUAoDzUdcSiW9e1dL6GovUIzXwQWhYAoGywYsc97uY6FK0HuNeaDY6w9zSdAwAACoeJUbReEYza7r7ZoOkcAABQQMz7t09RQRStF7DeH7tnAQDKzkhra7sOResJ/AXTCQAAoAhYV6BovQEXLgcAKFMoWsMWHaiqIra9hekcAABQHChawyKVNqZcBAAoYyhawxxL76hwIBQAQNlC0RqmHB0mhaIFAChHjuW8g6I1TCsVQM0CAJSl13dt6XkKRWuY1hRgNC0AQNnRRAscx9EoWsMU3r4HAChL2nEecNd4kjfMYc04GAoAoPzkHEbReoKmV9GzAADlRi+qb+t6yd1C0RqmNT+HogUAKC/a0eeu20bRGrZWZZ63yDYdAwAACkXTozUtmXvW3UTRGjalyXk7nYi+K5ujTGcBAIDNl9POrPVvo2g9QT9FxLubTgEAAJtJ08N1LZn7178LResBWvPdzISiBQDwt15y6McfvRNF6wVO7xyyAueajgEAAEOnSf+iprVr0UfvR9F6QN2cNR3JWMA9DHyc6SwAADB4mujulpbsZTUb+BiK1gPcKbpS8cgcZv6e6SwAADBY+lWnO3vMLHky39BHUbRewbk/yz/HSbJlmY4CAAAD1ivD2cPq5jlvfdInoGg9oqap+4l0InKtNO53TWcBAIAB0vrs6uauhzf2KShaD8nksrNsyz5MNkeazgIAABunNV1W09x12aY+D0XrIbu3Ov9LJSIXM/HFprMAAMBGaH25lOxZA/lUFK3HrFqVvaJqjH2ibH7OdBYAANgQfWVta/aHGzzyaQNQtB6zzwKnW0a1P5FR7S2mswAAwEdofbWU7A/cs0UG+ldQtB5U15K9rSMWPk3K9kumswAAwAeulZI9ZTAl60LRepD7j5hujJ5BFj0iN5XpPAAAw57Wlze3Zn802JJ1oWg9qrq1c1E6EXWPZvuJ6SwAAMNYRkr2O9XNXTdXD/ELoGg9bO1LmXOC48L74co+AABGPNub641Pau1Obc4XQdF6WP1iZ+2SGfbhlRW8lHBuLQBAKc3vymSO2ONu553N/UIoWo+bPDfzXDoeOZGYbzadBQBgGHD3wV78dEvmnJmOkyvEF0TR+kB1c9ct6UR0f9k8znQWAIAy9gxp56Tq5swDQ90fuyEoWp94Z1XmtKox9l6yOcF0FgCAMrPGnU5x1erMhe5cBoX+4ihan5B//M50Q+gwCgQelZuVpvMAAJSJf+Wc3HfrWrLLivUAKFofqW7rbk8mIj9VxJebzgIA4HOrHU1nTWrNXDOUc2MHA0XrM5NaslckY/YBsjnNdBYAAB9ao0lfm81lz3cv5DLQ+Yo3B4rWZ9xXXo81qmNtZSeJaSvTeQAAfKJXlr872rmgtjnzQikfGEXrQ+6rsHQifByRNU9usuk8AAAe5r4vfCtR7ryapuxyEwFQtD5V3ZS9OxWP/o2ZjjWdBQDAg6Rf9dzeXO4Xmzuz0+ZC0foZ6wfkj2NNxwAA8JCs1nSjo3O/K+aRxIOBovUx3ZtbygH8EwIAiNfca8WuzWX/VN/mrDQdZn14lvaxHK35n8I/IQAMY5roP/LnFcuXZ2+fmXbWmM6zIXiW9rGgFf6p6QwAAAa8JeV6S87hG+taOpe4d9SYTrQRKFqfWtpojw9Y6numcwAAlEiPlOs8R/ONuZcz89yrm5kONFAoWh9SSnEyZl8hmxWmswAAFJF75PBjJOXazZnbpjQ5b5sONBQoWh/qaLTdkex00zkAAIrAvf7rvY527sl1d99Tf5fzuulAmwtF6zOpxtAktgK/Mp0DAKBAHBm1tmvN84n1PatWZRfts8DpNR2qkFC0PrJwqopWjbFvJVy9BwD8KSPLU7I8QVo/mdPOE0r1LKlpct40HayYULQ+IiX7B8L1aAHADzStJKb7pVDTpPmJnl7niXnzul+Y5TilmMffU1C0PpFKRA5l4qNN5wAA2IjntdZtmnTb6tXd//roW8CTTaUyDEXrA8lDop9VQf6D6RwAAB/hHhX8H/mzTXOutaap+wnTgbwIRetxfafyNNrXy2aV6SwAAOtIwz6U69FHT7qz60XTWbwORetxSxvtU4jpANM5AADW0ZpuWP5M5rtenfLQa1C0HtbeEN45GLAuNZ0DACDP0aTPrmnuusTLUx56DYrWo9qnqGBwXPhG2bRNZwEAyLukpqnrEtMh/AZF61HBcfbPafgepAcAXqMp/WpP5vxq0zl8CEXrQcl4dDfF9DPTOQAA8tZSrvfYafOcHtNB/AhF6zHtDcoOBmz3LWP82wCAJ2iiK2rauttN5/ArPJl7TCAQducxxuxPAOAVOpdz/mI6hJ+haD0k3WhPY0udZDoHAMB6Hp3UmllhOoSfoWg9YnFCfSpk2dfJJpvOAgCwjnboRtMZ/A5F6wH52Z/+KhW7teksAADr0ZnuzB2mQ/gditYDOmL2qbKaYToHAMBHvLzH3c47pkP4HYrWsPyF3C8znQMAYAP+azpAOUDRGoQLuQOAp2n9lOkI5QBFaxAu5A4AXqaZUbQFgKI1JBWPHMWMC7kDgHex8+ELt8PQoGgN6DgkvJMVtHAhdwDwNqUipiOUAxRtic2frio/G+rbLzvCdBYAgI3TUdMJygGKtsS2rgy7l5iqN50DAGDTGEVbACjaEkolwgczW983nQMAYCC0xoi2EFC0JdLeEBkXtCx39idMsQgAvsDM2EdbACjaEli0lwrbY+1m2fy06SwAAAOlsY+2IFC0JRDZyv6zrHY1nQOMWCvL+7KsyS+9+SV/W8s2929r6tV9H9NrWO7TLNta7pcbTHqEJh4p69Hy+aPl/tFy/0j5exXGvjMYBrCPthBQtEWWSkRPk2fJo0zngIKTF/v0tpTha7J+hd010WtSlK+zI9tO7ys9zprX5s2jN2c5jlOsEAunqlAkQqOVqhxtWdZIrZ2RFikpY2e0VlLMmkcS6zHyqduR5vFSztvLdrhYeaC8MPW9mIPNhKItomTc3lex+o3pHDAkbjk+J23aIQX1nDzhvO6Qfk33lap+7fWe7tenzXN6NvVFJhc55D4LnG5ZvZFfNsm9UlR7g/0ZS+vxjtI7yO/n9vLiYLyMlMfL97mDPLNi9wasr3q2UtZMx8mZDuJnKNoi6Tv4KaBuJ/yM/UDKSj8hr987HE1JKdKOTieb3LPFef+T/kJtKdMVkAyupVf7R9+yPPTRj7cfoEYFwxU7kgpI6eodNPGOMlofLx+aJMuYEscF80ZOOKSiRtZLTQfxM5RAEbhv51WNCTfJ5hams8DHrCIpU3ekKktSiqf9vffWLJORIaaaE/X3Ou/Kqj2/fMAdCS+ZUTnRsngPZp4iI/zd5IWJ+3ojaCQolI4V+DKhaDcLirYIxoyx/0TFf9cQNi0ry0Ip1sccog4Zz3VMau1+MT+qg0HI/8yeyi83uPe5R9OHtgxPsph3I6bd5a49yN0XDGVG7y1/XGk6hZ+haAssFY+eykzHmM4xjD1BWt9Ljr6v663uhXs84mTX/2DRjkoahvI/20fzS5+O6WoLFarcnbS1e9+ol2kK4S1nX2PivU1n8DsUbQF1JCL7yKt7HPxUWqs16fvZ0ff0EN8zuaXrZdOBhrO6ec5bsrozv+QPvqr8vKynyRP2dLnLfRsSbzf7y2fa4/aO9c2ZZ00H8SsUbYEsbbTHB6y+g5/wJFJcMijV7VrzfGJ9z6pV2UXYv+pd+becl+WXyx+NqRFRZe8vo123dA+SZazRgDAgVv8LJBTtEKFoCyCVUFsGLPtu2dzSdJYy9SZpuldLsRJl761pct40HQiGJn8ktztLWrM72k3OqJikA9bBUrwHEvFucr8yHBE2QJFy3z6+wXQOv0LRbqaFU1W0akx4nmyON52lzGRkmZ0jfX1bS/bhYk76AGbkR7vrjnA+392/a1WEDyTm6cR0gNw32mxC+ADTjNnVqmJm2lljOoofoWg3Q/sUFawaZ99BOMK4gPTjmvivve9nbsmfakJ1piNBSeT37/7dXeQFbKBqZHhPrXg6M31D7tvecLzhbsuJ4+1DZD3bdBA/QtEOUd/bXjH7WtmcZjqL72laqUn/I+fk/jqptTtlOg6Yl9/v7k6o8dBspX42IVZ5IGnrJCld9/8b3l42gek7hKIdEhTtECUb7QtldbTpHH6m5UlUCvb3zzyTbcNbUvBJ8tP/9R3J3HfQoeKTiPk4wmlDpcX0tWTc3q62OfOC6Sh+g6IdgnQieor80v3UdA6fcq9Qc7vj0G/rWjqXuHf4dTpDKL1JrZkVsjqzvUH9IqhCh5NSJ8ntetO5hgnFpI6X9S9MB/EbFO0gpWPRmaQwS8oQuPtbr1nbq6+qb+t6yXQY8Lf6Nsc9WM7ddXNtRyyyp1J8Csvgl3DZwKJi1sctnKrOwyl1g4OiHYR0Y+QrZPGNhH1Eg/GiJn1ld3f22t3mOe+ZDgPlp66lq292qiUz1JmVFfb3ZftkwuXdioQ/O2a0faBszDWdxE9QtAOUagxNYivQJpsh01n8QT/maLp89epsM179QilMnuu4lwr86SMz1GUjKsKnMvFpcvtTpnOVHSb37XoU7SCgaAcg2RCdogKBewjn9W2Ke17kPZTTF1e3dn3sEmwApbDXXGeVrM5fOFVdXjU6fDIxn06Ygapg3MlFkgl7/9qmzH2ms/gFinYTliYiXwoE2J31aZTpLB4mg1fdnNN8yaTmzv+YDgPg2meB0ymry6Rwr6wabX9bGuLHcvtzpnOVA0Xqd+1TVG39Ymet6Sx+gKLdCHefbMBi97SCEaazeNRaremm3lzu0vq27FOmwwBsiBRut6z+KMVwTWBc6CgmdZbcnmA6l899PrBt2H1rHhdRGQAU7SdIx+2vkqXmyKZtOosHZbXW1+XW0K8n3dn1oukwAAORH31dP1upv+3UGE4o5p8Rzi4bMmY+Z8kMdVN+3zhsBIp2A1Ix++usVItshk1n8Rj3FJ2rM7nMFbu3Ov8zHQZgKPITYNyulLoj2WDPIKWlcHl307l8aGRlhX2prHH97U1A0X5EKh6dISXrzl9caTqLh7ztnqKjdfbK2mZntekwAIWQv6iB+67VHPfgHiY+T5Yvmc7lM0clGyN/qW3tesR0EC9D0a4nHY8mmOkWwjVl+2mSUau+/H2dvTp/eTOAsuQeQSsj3Pv7R7h0PuEt5YFituiWVEJNxuUrPxmKNi8djxwmvzLulUPwMyH9iib+VeZ/mWv2eMTJmk4DUArrRrjnKXVnvDF8qDwfnCu3dzIcy/OYeFtN9u3tU9T+OAp5w1Aq5F64PXIGM18mm5bpLIa9KKPYy17tyV43bZ7TYzoMgAn5ax/fvHCqur1qVOhYrfgct0xM5/IyJtonsG34ctk81XQWLxrWReteyHjiBPsP8p/oBNNZzHJHsHpW70vdN7qvSKtNxwHwgPyMZtfOn65u3Dpkf1fKxL2QCCa++AQyWPleMm7/p7Y5c4PpLF4zbIu2vUF9esIE27224j6msxjUrTX9mjLZS2rmO12mwwB4Uf7dnStT09R1bIe/L43yQ8Il+jZIsbo62RB9sratc7HpLF4yLIt2aSL8+WDAdufq3NF0FlO01q1r1uozJ8/NPGc6C4Af5F+MXpSMqz8y2Wcy0w/kdtR0Lo8JqYBuaW+I7ImrdP2fYVe06UZ7WsCybqXhO6Xifx3t/KC2OXOv6SAAfpQ/xe0XqYS6inX4LBnhulcLwsVGPsCfDQbogSUz1JcxmUW/YVW0qUT0NLaUO2XYsPq+87plGHvh089kL5uZdtaYDgPgd/nTWc5cMsP+Q0WQf8PMjaYzecj4yqB97+KE2m9Kk/O26TCmDYvCaZ+igsFx4SuZ+ETTWUzQRPfncs5Jk1ozK3CgE0Bh5Xe/xNx3y8hSvyPMo9yPqTpE4bsfn66+NtyvRV32RbvoQFUVGWe7Mz1NNZ3FgLc06TNqmrr+YToIQLmrbs3Mn12tqidMCJ8hL+rPJuy/FTwlFLLntjeoA+vbnIzpNKaUddG6l7iL2LZbMjuYzlJivTKK/WsPZX6Kt20ASie/W+aSjlj07xbTpTKqO4L6TjMdvuSb/0ogYM+WFyGNw3W3VVkW7WylrAmx8NkB4l9QmX6Pn0CLNkc7Z9e1ZJeZDgMwXNW1dL4mq6PS8chfiPlK9y7TmUxyLxY/cYLdJCPbbw3HkW3ZlVAybm83MWbfKJt7m85SUpr+SQ79tKa1a5HpKADQr7q562F54T95YqP9XWmbC+SuKtOZDDo4GAg/mEqoGcNtXuSyKlp3vmLF6o+yOdp0lhLqoJzzU3f/kOkgAPBx+cvy/bFjurrDCtmXyPZxNGzfTubdmOx/p2Phg6pbsk+bTlMqZVG0j09XI8OV9h+I+UjTWUroOXfaxJaW7M35uVkBwMPq5jlvyer4ZGPkemXxH2j4XiFoB1LWI/JzaBgul9fzfdG6BzyFQ8PogCdN/5NW/eUzz2T+4h5YUGM6DwAMilsus5XadULMPkWGte4l+Ybj5Dmfkhcb9ycTkaNrm7ruMB2m2HxbtMPwgKf3ZAT7m1Wrs5fvs8DpHK4vhQHKQf7t5CvbD1J3BML2r6VwDzedyYCQIr41lYhsW9PUdbnpMMXky4JKNdjbT4zZ7rVjh8MBT6u0pj/05jK/q29zVpoOAwCFU3+X87qsjkjF7GtZuZfq5MmmM5WYYuLfpOORcc2t2TPKdTeYr4q277J2O4V/yAHlngxum85TTDJ6fVlWV3Q62Wv2bHHeN50HAIqnpiXzoFJqt2SDPYMUnSt3TTKdqaSYvx+P2ZPbG8In1LdlnzIdp9B8U7SphD11wgTbPYBgZ9NZisyd9P+yZ57pvnm4ntwNMBzJYE7Lao4U7tyOmB1jLYXLNJxmTd0rGLCWphKR81atyv46fz3gsuD5om0/SH2mfx+GKvN9GHqRo/nS1tbMHPftE+yDBRie8oXbfJ5SrY2N4ZmKeJYU7i6mc5VIiIkvrhoTTixtDB0/qbU7ZTpQIXi2aPsPdrJPCYbtcj4qz/0PdY+MYC+tbc78070DBQsArvz+ytulcGfHG8OHEvE5UrgTTecqDZ4csAKL0/HoxU8/k7nI7+/uebJoU7Ho7hNj9tVUvvspeqVib+11en9VLq/YAKA48oV7sww+bpvQGD6cmH/G5b8LzVUhLyxmTZxgz0zGo9+ube583HSgofJU0bpX2rHD9sWs6AS5qUznKYI3taYbKOf8qaYt87zpMADgH/lTgm6UEe5N8Qb7YCmh02XZ13SuEviCYno0nYj+Vfc6F/nxudMTRauU4o5Y6LiI3Tc92Ram8xSYdCs9oLW+5plnsq1+fwsEAMzKj3DnuMvSeHRXi+kMGeF+kzzyfF4kliwncEAdI4X7N78VrvF/mFQisndHLHwZE3/JdJaC0vQ/ebX517Xauba+OfOsexf2vwJAIU1q7vyPrI5YenDkZ4EKOo2Y3XcDR5rOVURB8mHhGivadDxUTRy4SAr2YFMZisCRgr1flmvWvpJpq1/srDUdCADK36Q7u16U1ZntB6jzg9Gwe6WgU4l4G9O5ishXhVvyopVXXp+zKvhc5sBR1P92QDl4TWu6XpNzXW1z5gXTYQBgeKq/13lXVpe1T1G/DW4b/oaMcI+X2/tR+V4taP3CbaKcvrq6tesh06E+qmRFuzihPhXS4Z8FKvkUuVlZqsctoh5Z7nM0Xbd6debOcjq5GgD8Lf9u2s3u0h63dwyy+rZsHyvL1kaDFY9buIeSxYdK4T4hz8t/znVmbsy/8DCu6EX7yAw1ZkQw/L0Q22fKayq/nw+bIdLzSVNTtid7527znPdMBwIA2Jj8MSJnL5yqZlWNsg8ipWWUyweRB47RKZIvKqar1Aj7EindW3o1/Sm/L9uYov2g2xsi4wIWnT6ywnZ3zkeL9TglsFqK9U7N1NLbm5lf3+ZkTAcCABis/LtufUcr98+4Fz6GNR9bxpNgRGQ5IcB0QjoRWayJr39/Tea2veY6q0odpOBFm2oMTSIr8MNggP18uLl7gea2nJNrWbGi536ckgMA5SR/1SD3dMpLUonQF1lbjVK4DTLS3ZXKcn8uT5FvaooM/K5IJSJz2eEb176SubtUB6wWpAjd82CXNob2V6TOZCuwP/nyH0q/qjW1EOuWVau6H1q3z7XOdCwAgCKqaep+Qlbu8sslsci2QeYGltKVJ/F9qH/fZzmpZOKZpGhmcJz9lox0b8lJ6da1dC4p5oNuVtE+GlMjImwflozZJ5P/ThN13wJ+SJO+L5fL3b/rnDXp/GTeAADD0uSWLvfynL93l77jayrC02VbSpenkb93AW7IFjImPM1SdFoqEXWnwr0uk8n8Y4+7nXcK/UBDKtqOWHSyYvrOCGUfJjdHFDhTseRk1Pof+cHer8l54LXu7kemzXN61n2wLK82DAAwRPl9mf9wl4VTVWjUqMqpFquvEvNUua+GymiaXO7/fn4Xse1LpXSbZdD117a27gWFuhD9gIvWHb1GlX2EBPqOvAKoL8SDl8ByGbHeLz/GB95fk3lw/Z3gNSZTAQD4yD4LnG5Z3ZVfqL1BfdqywlNlwLWfPL+6xTvBaMDCCUnHHW4pdXg8Zj+fSkT+0t2d/ePmnmGyyaJNxkN1igOnyOj1UPL6Wwea/qeZHpDx6QO9vXx/fVvXS6YjAQCUm/o2Z6Wsbs8vlJ4e3YYq9FTNvB8zucU7zmjAwtjevTZuOGT/KB2P/Dbbk71yqIX7iUW7aC8Vjoy1z5eSPZ28O4NTp9b0ELF+APtZAQDMqJ7X+Yqs/p5fKJUIT5CS2kdGu+67n7Kw+yZiyGTGzVBFzBdI4Z4+1MLdYNG6E/1LyV4vmzsVJGZhvCsj1qUybG2XUetSKdT2FW09T+cvHdUH+1kBAMyracoul9Xydbfbp6igtW3FF5iVW7q7cn/5ugfQhs2lHLR1hfuDZGP4mNrW7LyB/sUPFW1qmoqQHf4lM59GZnd0vy2l+h9iane0llLV7bvO6X72o6NVnHoDAOB9+fNVO/KLO4ijhVNVYOTIil0sS00mzZOkxGqkgLej/mkivTwHw6eUZc2RAel5dS3ZCwbyLuoH30wybu+rIva1srljUSP2c0+tWdm36L71m5L0BSnWpVo77RuamB+jVQCA8pGfqyCVXz7gFvDo0SH3ykPbuYsitZ30w+eY+/b7rlsqSp33IxQTn9fRGJ70+HR1zKbeSg64Q/rgtuGzFPOJ/dcoZ/cAIvcH0Cs3HNbkaKZe7rtPu33nyKuP3nX3ffA5ss2se6U412rit+WHslKTfpsdWpkjZyWzJYXqvJnLdb+JaQwBAGBD8gX8Qn75mPOUUg0N9lilequIrNHscJXDTpUU8mjpoVFMeqR0UFQGblHZjpK7LWu5b6TcHiG3C3HMkduFb7gboYrwgbK6bWOf/P8BIwbwaEd8/OcAAAAASUVORK5CYII=" alt="RabbitPrint" style="width:72px;height:auto;filter:drop-shadow(0 0 28px rgba(240,120,40,0.6))">
+      <span style="font-size:18px;font-weight:800;letter-spacing:-.03em;color:#F0EDE8">Rabbit<span style="color:#F07828">Flow</span></span>
+    </div>
+    <div class="eyebrow r in"><span class="eyebrow-dot"></span>Para makers de impressão 3D</div>
+    <h1 class="r d1">
+      Você imprime.<br>
+      <span class="or">Nós organizamos.</span>
+    </h1>
+    <p class="hero-sub r d2">
+      Pare de perder dinheiro no caderno. Controle lojas, chaveiros e recebimentos — no celular, em tempo real.
+    </p>
+    <a href="https://buy.stripe.com/test_fZueV68Tn7qkgAj7qlbII00" class="cta-big r d3">
+      Assinar por R$19,90/mês
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+    <p class="cta-note r d4">Menos de R$1 por dia · Cancele quando quiser</p>
+  </div>
+
+  <!-- iPHONE TRIO -->
+  <div class="iphone-wrap r d3">
+
+    <!-- iPhone LEFT — Comerciante -->
+    <div class="iphone iphone-side" style="align-self:center">
+      <div class="iphone-shell">
+        <div class="iphone-island"></div>
+        <div class="iphone-screen">
+          <div class="scr3-hdr">
+            <div class="scr3-tt">RabbitFlow</div>
+            <div class="scr3-sub">Link do comerciante · Papelaria Central</div>
+          </div>
+          <div class="scr3-itens">
+            <div class="scr3-item">
+              <div><div class="scr3-item-nm">Stitch</div><div class="scr3-item-sb">Enviado: 12 un.</div></div>
+              <input class="scr3-inp" value="4" readonly>
+            </div>
+            <div class="scr3-item">
+              <div><div class="scr3-item-nm">Naruto</div><div class="scr3-item-sb">Enviado: 8 un.</div></div>
+              <input class="scr3-inp" value="3" readonly>
+            </div>
+            <div class="scr3-item">
+              <div><div class="scr3-item-nm">Mario</div><div class="scr3-item-sb">Enviado: 10 un.</div></div>
+              <input class="scr3-inp" value="7" readonly>
+            </div>
+          </div>
+          <button class="scr3-enviar">✓ Enviar vendas</button>
+        </div>
+      </div>
+      <div class="iphone-glow"></div>
+      <div class="iphone-reflect"></div>
+    </div>
+
+    <!-- iPhone CENTER — Home (principal) -->
+    <div class="iphone" style="z-index:2">
+      <div class="iphone-shell">
+        <div class="iphone-island"></div>
+        <div class="iphone-screen">
+          <div class="app-hdr">
+            <div class="app-logo">Rabbit<span>Flow</span></div>
+            <div class="app-badge">Maker Pro</div>
+          </div>
+          <div class="app-body">
+            <div class="app-greeting">Olá, Felipe 👋</div>
+            <div class="app-name">RabbitPrint</div>
+            <div class="app-grid">
+              <div class="app-card"><div class="app-card-ico">➕</div><div class="app-card-nm">Nova loja</div><div class="app-card-sb">Cadastrar</div></div>
+              <div class="app-card"><div class="app-card-ico">🏪</div><div class="app-card-nm">Minhas lojas</div><div class="app-card-sb">4 cadastradas</div></div>
+              <div class="app-card"><div class="app-card-ico">📦</div><div class="app-card-nm">Produtos</div><div class="app-card-sb">38 chaveiros</div></div>
+              <div class="app-card"><div class="app-card-ico">💰</div><div class="app-card-nm">Financeiro</div><div class="app-card-sb">3 pendentes</div></div>
+            </div>
+            <div class="app-fin" style="margin-bottom:10px">
+              <div><div class="app-fin-lbl">Total consignado</div><div class="app-fin-val">R$ 1.840</div></div>
+              <div><div class="app-fin-lbl">Você recebe</div><div class="app-fin-val or">R$ 434</div></div>
+            </div>
+            <div class="app-loja"><div class="app-loja-av">🏪</div><div><div class="app-loja-nm">Papelaria Central</div><div class="app-loja-sb">12 peças · 30%</div></div><div class="app-loja-vl">R$168</div></div>
+            <div class="app-loja"><div class="app-loja-av">🐾</div><div><div class="app-loja-nm">Pet Lovers</div><div class="app-loja-sb">8 peças · 35%</div></div><div class="app-loja-vl">R$98</div></div>
+            <div class="app-loja"><div class="app-loja-av">✂️</div><div><div class="app-loja-nm">Barbearia Flow</div><div class="app-loja-sb">6 peças · 30%</div></div><div class="app-loja-vl">R$84</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="iphone-glow"></div>
+      <div class="iphone-reflect"></div>
+    </div>
+
+    <!-- iPhone RIGHT — Financeiro -->
+    <div class="iphone iphone-side r2" style="align-self:center">
+      <div class="iphone-shell">
+        <div class="iphone-island"></div>
+        <div class="iphone-screen">
+          <div class="scr2-hdr">
+            <div class="scr2-tt">Financeiro</div>
+            <div class="scr2-sub">3 contas pendentes</div>
+          </div>
+          <div class="scr2-card">
+            <div class="scr2-lbl">Você recebe este mês</div>
+            <div class="scr2-val">R$ 434,00</div>
+            <div class="scr2-row"><span>Total consignado</span><strong>R$ 1.840</strong></div>
+            <div class="scr2-row"><span>Vendas realizadas</span><strong>R$ 620</strong></div>
+            <div class="scr2-row"><span>Comissão (30%)</span><strong>- R$ 186</strong></div>
+          </div>
+          <button class="scr2-btn">📱 Cobrar no WhatsApp</button>
+        </div>
+      </div>
+      <div class="iphone-glow"></div>
+      <div class="iphone-reflect"></div>
+    </div>
+
+  </div><!-- /iphone-wrap -->
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="cx">
+    <div class="r"><div class="section-tag">O problema</div></div>
+    <h2 class="r d1">Você está perdendo dinheiro<br><span style="color:rgba(255,80,80,.9)">agora mesmo.</span></h2>
+    <div class="pain-cards">
+      <div class="pain-card r d1">
+        <div class="pain-card-ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,80,80,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3>Caderno não escala</h3>
+        <p>Na quinta loja, você perde o controle. Na décima, desiste de controlar.</p>
+      </div>
+      <div class="pain-card r d2">
+        <div class="pain-card-ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,80,80,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h3>Você não sabe o que vendeu</h3>
+        <p>O comerciante diz 6. Você acha que eram 8. Ninguém sabe. Você aceita o número errado.</p>
+      </div>
+      <div class="pain-card r d3">
+        <div class="pain-card-ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,80,80,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Cobrança no chute</h3>
+        <p>Você cobra pelo total consignado mas vendeu só metade. Ou menos do que devia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="feat">
+  <div class="feat-inner cx r">
+    <div>
+      <div class="section-tag">Como funciona</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:10px">Três passos.<br>Zero planilha.</h2>
+      <p style="font-size:15px;color:var(--tx2);max-width:400px;line-height:1.65">Do cadastro ao recebimento — tudo automatizado. Você só acompanha os números.</p>
+      <div class="feat-list">
+        <div class="feat-item"><div class="feat-dot"></div><div><h4>Cadastre a loja e os produtos</h4><p>Nome, comissão, chaveiros e preços. Dois minutos de setup.</p></div></div>
+        <div class="feat-item"><div class="feat-dot"></div><div><h4>Mande o link pro comerciante</h4><p>Ele registra as vendas no celular, sem cadastro, sem app. Os dados chegam pra você em tempo real.</p></div></div>
+        <div class="feat-item"><div class="feat-dot"></div><div><h4>Cobre com um clique</h4><p>O RabbitFlow calcula o valor exato e gera a mensagem do WhatsApp automaticamente.</p></div></div>
+      </div>
+    </div>
+    <div class="r d2" style="display:flex;justify-content:center">
+      <!-- mini iPhone feat -->
+      <div style="width:220px;flex-shrink:0;animation:float 5.2s ease-in-out infinite">
+        <div class="iphone-shell" style="width:220px;height:448px;border-radius:40px;padding:9px">
+          <div class="iphone-island" style="width:70px;height:20px"></div>
+          <div class="iphone-screen" style="border-radius:33px">
+            <div class="scr3-hdr" style="padding:32px 12px 8px">
+              <div class="scr3-tt">Recibo de entrega</div>
+              <div class="scr3-sub">Felipe assinou digitalmente</div>
+            </div>
+            <div class="scr3-itens" style="margin:10px">
+              <div class="scr3-item"><div><div class="scr3-item-nm">Stitch</div><div class="scr3-item-sb">12 un. · R$15,00</div></div><div style="font-size:11px;font-weight:700;color:var(--or)">12</div></div>
+              <div class="scr3-item"><div><div class="scr3-item-nm">Naruto Kunai</div><div class="scr3-item-sb">8 un. · R$18,00</div></div><div style="font-size:11px;font-weight:700;color:var(--or)">8</div></div>
+              <div class="scr3-item"><div><div class="scr3-item-nm">Mario Bros</div><div class="scr3-item-sb">10 un. · R$14,00</div></div><div style="font-size:11px;font-weight:700;color:var(--or)">10</div></div>
+            </div>
+            <div style="margin:0 10px;background:rgba(63,185,110,.1);border:1px solid rgba(63,185,110,.2);border-radius:8px;padding:10px;text-align:center">
+              <div style="font-size:20px;color:var(--gn)">✓</div>
+              <div style="font-size:8px;font-weight:700;color:var(--gn);margin-top:2px">Recibo assinado</div>
+              <div style="font-size:7px;color:var(--tx3);margin-top:2px">João · 14/07/2025 · 14:32</div>
+            </div>
+          </div>
+        </div>
+        <div class="iphone-glow" style="width:140px;height:50px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi">
+  <div class="cx">
+    <div class="r"><div class="section-tag">Depoimentos</div></div>
+    <h2 class="r d1" style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.04em;line-height:1.1;max-width:1080px;margin:0 auto 0">O que os makers dizem.</h2>
+    <div class="testi-grid">
+      <div class="testi-card ft r d1">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"Em um mês, descobri que uma loja me devia R$340 que eu nem sabia. O RabbitFlow se pagou em 3 dias."</div>
+        <div class="testi-author"><div class="testi-av">🐰</div><div><div class="testi-nm">Carlos Eduardo</div><div class="testi-role">6 lojas em consignação · Brasília/DF</div></div></div>
+      </div>
+      <div class="testi-card r d2">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"Mando o link pro dono da loja e ele mesmo registra as vendas. Economizei 3 horas por semana."</div>
+        <div class="testi-author"><div class="testi-av">🎨</div><div><div class="testi-nm">Ana Luiza Ferreira</div><div class="testi-role">Maker 3D · 4 pontos de venda · Goiânia/GO</div></div></div>
+      </div>
+      <div class="testi-card r d3">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"A calculadora de custo mudou tudo. Descobri que estava tendo prejuízo de R$3 por chaveiro."</div>
+        <div class="testi-author"><div class="testi-av">⚡</div><div><div class="testi-nm">Rodrigo Maia</div><div class="testi-role">Maker 3D · 3 lojas · São Paulo/SP</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="preco">
+  <div class="cx">
+    <div class="r"><div class="section-tag" style="margin-bottom:16px">Preço</div></div>
+    <h2 class="r d1">Quanto custa perder<br>o controle?</h2>
+    <p class="pricing-sub r d2">Compare com o que você pagaria pelo equivalente.</p>
+
+    <div class="anchor-row r d2">
+      <div class="anchor-item">
+        <div class="anchor-lbl">Consultor financeiro</div>
+        <div class="anchor-val">R$800</div>
+        <div class="anchor-sub">por hora</div>
+      </div>
+      <div class="anchor-item">
+        <div class="anchor-lbl">Sistema ERP</div>
+        <div class="anchor-val">R$189</div>
+        <div class="anchor-sub">por mês · complexo</div>
+      </div>
+      <div class="anchor-item">
+        <div class="anchor-lbl">Assistente administrativo</div>
+        <div class="anchor-val">R$1.800</div>
+        <div class="anchor-sub">por mês</div>
+      </div>
+    </div>
+
+    <div class="price-box r d3">
+      <div class="price-tag">🐰 RabbitFlow</div>
+      <div class="price-num"><sup>R$</sup>29<span style="font-size:36px;color:var(--tx3)">,90</span></div>
+      <div class="price-period">por mês</div>
+      <div class="price-equiv">Menos de R$1 por dia. Menos que um café.</div>
+      <ul class="price-feats">
+        <li class="price-feat"><div class="price-feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Lojas e chaveiros ilimitados</li>
+        <li class="price-feat"><div class="price-feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Link para o comerciante registrar vendas</li>
+        <li class="price-feat"><div class="price-feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Recibo com assinatura digital</li>
+        <li class="price-feat"><div class="price-feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Cobrança automática via WhatsApp</li>
+        <li class="price-feat"><div class="price-feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Calculadora de custo de impressão 3D</li>
+        <li class="price-feat"><div class="price-feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Dados na nuvem · acesso em qualquer dispositivo</li>
+      </ul>
+      <a href="https://buy.stripe.com/test_fZueV68Tn7qkgAj7qlbII00" class="cta-big" style="width:100%;justify-content:center;font-size:15px">
+        Assinar agora por R$19,90/mês
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <p class="price-note">Sem cartão para testar · Cancele quando quiser</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fw">
+    <div>
+      <div class="f-logo">Rabbit<em>Flow</em></div>
+      <div class="f-tagline" style="margin-top:4px">Do filamento ao financeiro.</div>
+    </div>
+    <div class="f-copy">© 2025 RabbitPrint · Brasília, DF</div>
+  </div>
+</footer>
+
+<script>
+// NAV scroll
+var nav=document.getElementById('nav');
+window.addEventListener('scroll',function(){nav.classList.toggle('on',scrollY>50)},{ passive:true });
+
+// Scroll reveal
+var obs=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in')});
+},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.r:not(.in)').forEach(function(el){obs.observe(el)});
+
+// Hero elements already visible
+setTimeout(function(){
+  document.querySelectorAll('.hero .r').forEach(function(el){el.classList.add('in')});
+},80);
+</script>
+</body>
+</html>
